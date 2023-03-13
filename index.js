@@ -60,30 +60,6 @@ client.on('messageCreate', async function(msg) => {
 });
 client.on("interactionCreate", async function(interaction) => {
 	if(interaction.commandName === "learn") {
-		if(interaction.options.getSubcommand() === "speak") {
-			await interaction.deferReply();
-			const text = interaction.options.getString("text");
-			if(!interaction.member.voice) { await interaction.editReply("Please connect a voice channel!"); return; }
-			const connection = joinVoiceChannel({
-            	channelId: interaction.member.voice.channelId,
-            	guildId: interaction.channel.guild.id,
-            	adapterCreator: interaction.channel.guild.voiceAdapterCreator,
-            	selfDeaf: false
-        	});
-			const player = createAudioPlayer();
-        	await connection.subscribe(player);
-			connection.on('stateChange', (old_state, new_state) => {
-				if (old_state.status === VoiceConnectionStatus.Ready && new_state.status === VoiceConnectionStatus.Connecting) {
-					connection.configureNetworking();
-				}
-			});
-			await gtts.save("./audio/tts.wav", text, async function() {
-  				const resource = createAudioResource("./audio/tts.wav");
-				await wait(1000);
-				await player.play(resource);
-				await interaction.editReply(`Played ${text} to your voice channel.`);
-			});
-		}
 		if(interaction.options.getSubcommand() === "start") {
 			await interaction.deferReply();
 			if(ttsList.indexOf(interaction.channel.id) === -1) {
