@@ -47,11 +47,6 @@ client.on('messageCreate', async function(msg) => {
 		});
 		const player = createAudioPlayer();
 		await connection.subscribe(player);
-		connection.on('stateChange', (old_state, new_state) => {
-			if (old_state.status === VoiceConnectionStatus.Ready && new_state.status === VoiceConnectionStatus.Connecting) {
-				connection.configureNetworking();
-			}
-		});
 		gtts.save("./audio/tts.wav", msg.content, async function() {
 			const resource = createAudioResource("./audio/tts.wav");
 			player.play(resource);
